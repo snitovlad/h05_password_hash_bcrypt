@@ -8,18 +8,19 @@ import { PostsQueryModel } from '../../models/posts-models/PostsQueryModel';
 import { URIParamsBlogIdModel } from '../../models/blogs-models/URIParamsBlogIdModel';
 import { PostsViewModel } from '../../models/posts-models/PostsViewModel';
 import { postsQueryRepository } from '../../repositories/posts/posts-query-repository';
+import { queryDefaulPostsValues } from '../../helper/queryDefaultValues';
 
 
 
-const queryDefaulValues = (query: PostsQueryModel/*{[key: string]: number | undefined}*/) => {
-    // варианты задания дефолтных значений
-    return {
-        sortBy: query.sortBy ? query.sortBy : 'createdAt',
-        sortDirection: query.sortDirection ? query.sortDirection as SortDirection : 'desc',
-        pageNumber: query.pageNumber ? +query.pageNumber : 1,
-        pageSize: query.pageSize !== undefined ? +query.pageSize : 10,
-    }
-}
+// const queryDefaulValues = (query: PostsQueryModel/*{[key: string]: number | undefined}*/) => {
+//     // варианты задания дефолтных значений
+//     return {
+//         sortBy: query.sortBy ? query.sortBy : 'createdAt',
+//         sortDirection: query.sortDirection ? query.sortDirection as SortDirection : 'desc',
+//         pageNumber: query.pageNumber ? +query.pageNumber : 1,
+//         pageSize: query.pageSize !== undefined ? +query.pageSize : 10,
+//     }
+// }
 
 export const findAllPostsOfBlogController = async (
     req: RequestWithParamsAndQuery<URIParamsBlogIdModel, PostsQueryModel>, res: Response<PostsViewModel | { error: string }>) => {
@@ -29,7 +30,7 @@ export const findAllPostsOfBlogController = async (
         res.sendStatus(404)
         return
     }
-    const sanitizedQuery = queryDefaulValues(req.query)
+    const sanitizedQuery = queryDefaulPostsValues(req.query)
     const blogId = req.params.id
     const allPosts = await postsQueryRepository.findAllPosts(sanitizedQuery, blogId)
     res

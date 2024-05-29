@@ -2,9 +2,9 @@ import { ObjectId } from "mongodb"
 import { blogCollection } from "../../db/mongo-db"
 import { BlogViewModel } from "../../models/blogs-models/BlogViewModel"
 import { BlogDBType } from "../../db/db-type"
-import { BlogsQueryModel } from "../../models/blogs-models/BlogsQueryModel"
 import { BlogsViewModel } from "../../models/blogs-models/BlogsViewModel"
 import { BlogsSanitizedQueryModel } from "../../models/blogs-models/BlogsSanitizedQueryModel"
+import { commonResponseGeneration } from "../../helper/responseGeneration"
 
 export const blogsQueryRepository = {
 
@@ -37,17 +37,15 @@ export const blogsQueryRepository = {
                 .limit(sanitizedQuery.pageSize)
                 .toArray() as BlogDBType[]
 
-            // подсчёт элементов (может быть вынесено во вспомогательный метод)
+            // подсчёт элементов
             const totalCount = await blogCollection.countDocuments(filter)
 
-            // формирование ответа в нужном формате (может быть вынесено во вспомогательный метод)
+            // формирование ответа в нужном формате
             return {
-                pagesCount: Math.ceil(totalCount / sanitizedQuery.pageSize),
-                page: sanitizedQuery.pageNumber,
-                pageSize: sanitizedQuery.pageSize,
-                totalCount,
+                ...commonResponseGeneration(filter, sanitizedQuery, totalCount),
                 items: items.map(this.mapToOutput)
             }
+
         } catch (e) {
             console.log(e)
             return { error: 'error with getting of blogs' }
@@ -56,7 +54,7 @@ export const blogsQueryRepository = {
 
     mapToOutput(blog: BlogDBType): BlogViewModel {
         return {
-            id: blog._id,
+            id: blog._id.toString(),
             name: blog.name,
             description: blog.description,
             websiteUrl: blog.websiteUrl,

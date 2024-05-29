@@ -18,3 +18,10 @@ export type PostDBType = {
     blogName: string | undefined
     createdAt: string
 }
+
+export type UserDBType = {
+    _id: ObjectId
+    login: string
+    email: string
+    createdAt: string
+}

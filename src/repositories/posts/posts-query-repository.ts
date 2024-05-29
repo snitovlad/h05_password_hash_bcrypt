@@ -2,9 +2,10 @@ import { ObjectId } from "mongodb"
 import { postCollection } from "../../db/mongo-db"
 import { PostViewModel } from "../../models/posts-models/PostViewModel"
 import { PostDBType } from "../../db/db-type"
-import { PostsQueryModel } from "../../models/posts-models/PostsQueryModel"
 import { PostsViewModel } from "../../models/posts-models/PostsViewModel"
 import { PostsSanitizedQueryModel } from "../../models/posts-models/PostsSanitizedQueryModel"
+import { commonResponseGeneration } from "../../helper/responseGeneration"
+
 
 export const postsQueryRepository = {
 
@@ -22,10 +23,6 @@ export const postsQueryRepository = {
     async findAllPosts(sanitizedQuery: PostsSanitizedQueryModel, blogId?: string): Promise<PostsViewModel | { error: string }> {
         // формирование фильтра (может быть вынесено во вспомогательный метод)
         const byId = blogId ? { blogId: blogId } : {}
-
-        // const search = query.searchNameTerm
-        //     ? { name: { $regex: query.searchNameTerm, $options: 'i' } } //$options: 'i' - все равно какой регистр
-        //     : {}
 
         const filter = {
             ...byId,
@@ -45,12 +42,9 @@ export const postsQueryRepository = {
             // подсчёт элементов (может быть вынесено во вспомогательный метод)
             const totalCount = await postCollection.countDocuments(filter)
 
-            // формирование ответа в нужном формате (может быть вынесено во вспомогательный метод)
+            // формирование ответа в нужном формате
             return {
-                pagesCount: Math.ceil(totalCount / sanitizedQuery.pageSize),
-                page: sanitizedQuery.pageNumber,
-                pageSize: sanitizedQuery.pageSize,
-                totalCount,
+                ...commonResponseGeneration(filter, sanitizedQuery, totalCount),
                 items: items.map(this.mapToOutput)
             }
         } catch (e) {
@@ -61,7 +55,7 @@ export const postsQueryRepository = {
 
     mapToOutput(post: PostDBType): PostViewModel {
         return {
-            id: post._id,
+            id: post._id.toString(),
             title: post.title,
             shortDescription: post.shortDescription,
             content: post.content,

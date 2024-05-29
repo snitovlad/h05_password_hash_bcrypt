@@ -1,7 +1,5 @@
-import { ObjectId } from "mongodb"
-
 export type PostViewModel = {
-    id: ObjectId
+    id: string
     title: string
     shortDescription: string
     content: string

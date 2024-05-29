@@ -27,3 +27,15 @@ export const inputPageSizeQueryValidator = () => query('pageSize')
     .trim().notEmpty().withMessage('Error!! Field shouldn\'t be empty')
     .isInt().withMessage('Error!! Field should be number')
     .isLength({ min: 1, max: 15 }).withMessage('Error!! Invalid field length')
+
+export const inputSearchLoginTermQueryValidator = () => query('searchLoginTerm')
+    .optional()
+    .trim().notEmpty().withMessage('Error!! Field shouldn\'t be empty')
+    .isLength({ min: 1, max: 30 }).withMessage('Error!! Invalid field length')
+
+export const inputSearchEmailTermQueryValidator = () => query('searchEmailTerm')
+    .optional()
+    .trim().notEmpty().withMessage('Error!! Field shouldn\'t be empty')
+    .isLength({ min: 1, max: 30 }).withMessage('Error!! Invalid field length')
+
+

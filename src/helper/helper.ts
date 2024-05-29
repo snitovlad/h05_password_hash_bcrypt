@@ -35,6 +35,5 @@ export function filterOfFirstErrorInEveryField(errors: any[]) {
         let errorObj = errors.filter(e => e.path === fields[i])[0]
         errorCorrect.push(errorObj)
     }
-    //console.log("errorCorrect", errorCorrect);
     return errorCorrect
 }
