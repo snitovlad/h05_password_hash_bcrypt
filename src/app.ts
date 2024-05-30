@@ -3,6 +3,7 @@ import { blogsRouter } from './routers/blogsRouter'
 import { SETTINGS } from './settings'
 import { postsRouter } from './routers/postsRouter'
 import { testingRouter } from './routers/testingRouter'
+import { usersRouter } from './routers/usersRouter'
 //import cors from 'cors'
 
 
@@ -16,5 +17,5 @@ app.get('/', (req, res) => {
 })
 app.use(SETTINGS.PATH.BLOGS, blogsRouter)
 app.use(SETTINGS.PATH.POSTS, postsRouter)
-
+app.use(SETTINGS.PATH.USERS, usersRouter)
 app.use(SETTINGS.PATH.TESTING, testingRouter)

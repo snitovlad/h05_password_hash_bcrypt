@@ -5,7 +5,6 @@ export type UsersSanitizedQueryModel = {
     sortDirection: SortDirection
     pageNumber: number
     pageSize: number
-    searchEmailTerm: string | null
     searchLoginTerm: string | null
-
+    searchEmailTerm: string | null
 }
