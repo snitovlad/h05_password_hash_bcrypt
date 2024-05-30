@@ -1,5 +1,5 @@
 import { Request, Response } from 'express'
-import { deleteAllDataRepository } from './deleteAllData-repository';
+import { deleteAllDataRepository } from '../../repositories/testing/deleteAllData-repository';
 
 export const deleteAllData = (req: Request, res: Response) => {
 

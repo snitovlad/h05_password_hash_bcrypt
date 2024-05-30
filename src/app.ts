@@ -4,6 +4,7 @@ import { SETTINGS } from './settings'
 import { postsRouter } from './routers/postsRouter'
 import { testingRouter } from './routers/testingRouter'
 import { usersRouter } from './routers/usersRouter'
+import { authRouter } from './routers/authRouter'
 //import cors from 'cors'
 
 
@@ -15,6 +16,7 @@ app.get('/', (req, res) => {
     // эндпоинт, который будет показывать на верселе какая версия бэкэнда сейчас залита
     res.status(200).json({ version: '1.0' })
 })
+app.use(SETTINGS.PATH.AUTH, authRouter)
 app.use(SETTINGS.PATH.BLOGS, blogsRouter)
 app.use(SETTINGS.PATH.POSTS, postsRouter)
 app.use(SETTINGS.PATH.USERS, usersRouter)
