@@ -20,19 +20,14 @@ export const usersQueryRepository = {
         //const byId = blogId ? { blogId: new ObjectId(blogId) } : {}
 
         const searchLoginTerm = sanitizedQuery.searchLoginTerm
-            ? { name: { $regex: sanitizedQuery.searchLoginTerm, $options: 'i' } } //$options: 'i' - все равно какой регистр
+            ? { login: { $regex: sanitizedQuery.searchLoginTerm, $options: 'i' } } //$options: 'i' - все равно какой регистр
             : {}
 
         const searchEmailTerm = sanitizedQuery.searchEmailTerm
-            ? { name: { $regex: sanitizedQuery.searchEmailTerm, $options: 'i' } } //$options: 'i' - все равно какой регистр
+            ? { email: { $regex: sanitizedQuery.searchEmailTerm, $options: 'i' } } //$options: 'i' - все равно какой регистр
             : {}
 
-
-        const filter = {
-            //...byId,
-            //_id: { $in: [new ObjectId(someStringId), ...] },
-            $or: [{ ...searchLoginTerm }, { ...searchEmailTerm }]
-        }
+        const filter = { ...searchLoginTerm, ...searchEmailTerm }
 
         try {
             // собственно запрос в бд (может быть вынесено во вспомогательный метод)
