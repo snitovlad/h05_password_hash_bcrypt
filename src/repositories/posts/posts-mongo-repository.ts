@@ -26,10 +26,10 @@ export const postsMongoRepository = {
 
     async updatePost(id: string, input: UpdatePostModel): Promise<boolean | { error?: string }> {
 
-        let foundPost = await postsQueryRepository.findPost(id)
-        const updatePost = { ...foundPost, ...input }
+        // let foundPost = await postsQueryRepository.findPost(id)
+        // const updatePost = { ...foundPost, ...input }
         try {
-            const updateInfo = await postCollection.updateOne({ _id: new ObjectId(id) }, { $set: updatePost })
+            const updateInfo = await postCollection.updateOne({ _id: new ObjectId(id) }, { $set: { ...input } })
             return updateInfo.matchedCount === 1
         } catch (e: any) {
             // log
