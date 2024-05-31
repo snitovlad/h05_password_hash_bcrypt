@@ -27,7 +27,7 @@ export const usersQueryRepository = {
             ? { email: { $regex: sanitizedQuery.searchEmailTerm, $options: 'i' } } //$options: 'i' - все равно какой регистр
             : {}
 
-        const filter = { ...searchLoginTerm, ...searchEmailTerm }
+        const filter = { $or: [{ ...searchLoginTerm }, { ...searchEmailTerm }] }
 
         try {
             // собственно запрос в бд (может быть вынесено во вспомогательный метод)
