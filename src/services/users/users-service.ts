@@ -1,10 +1,8 @@
 import { ObjectId } from "mongodb";
-import { UserViewModel } from "../../models/users-model/UserViewModel";
 import bcrypt from 'bcrypt'
 import { UserDBType } from "../../db/db-type";
 import { usersMongoRepository } from "../../repositories/users/user-mongo-repository";
-import { error } from "console";
-import { ErrorsViewModel, errorMessage } from "../../models/errors-models/ErrorsViewModel";
+import { errorMessage } from "../../models/errors-models/ErrorsViewModel";
 
 export const usersService = {
 

@@ -1,34 +1,13 @@
 import { ObjectId } from "mongodb"
 import { PostDBType } from "../../db/db-type"
-import { blogCollection, postCollection } from "../../db/mongo-db"
-import { currentDateISOString } from "../../helper/helper"
-import { CreatePostModel } from "../../models/posts-models/CreatePostModel"
-import { PostViewModel } from "../../models/posts-models/PostViewModel"
+import { postCollection } from "../../db/mongo-db"
 import { UpdatePostModel } from "../../models/posts-models/UpdatePostModel"
 import { postsQueryRepository } from "./posts-query-repository"
 
 export const postsMongoRepository = {
 
-    // async findAllPosts(): Promise<PostViewModel[]> {
-    //     const posts = await postCollection.find({}).toArray() //здесь можно без await
-    //     return posts.map(this.mapToOutput)
-    // },
+    async createPost(newPost: PostDBType): Promise<{ error?: string, id?: ObjectId }> {
 
-    // async findPost(id: string): Promise<PostViewModel | null> {
-    //     const post = await postCollection.findOne({ _id: new ObjectId(id) })
-    //     if (!post) return null
-    //     return this.mapToOutput(post)
-    // },
-
-    async createPost(input: CreatePostModel): Promise<{ error?: string, id?: ObjectId }> {
-
-        const blogName = await blogCollection.findOne({ _id: new ObjectId(input.blogId) })
-        const newPost = {
-            _id: new ObjectId(),
-            ...input,
-            blogName: blogName?.name,
-            createdAt: currentDateISOString(),
-        }
         try {
             const insertedInfo = await postCollection.insertOne(newPost)
             console.log(insertedInfo)
@@ -58,15 +37,4 @@ export const postsMongoRepository = {
         }
     },
 
-    // mapToOutput(post: PostDBType): PostViewModel {
-    //     return {
-    //         id: post._id,
-    //         title: post.title,
-    //         shortDescription: post.shortDescription,
-    //         content: post.content,
-    //         blogId: post.blogId.toString(),
-    //         blogName: post.blogName,
-    //         createdAt: post.createdAt
-    //     }
-    // }
 }

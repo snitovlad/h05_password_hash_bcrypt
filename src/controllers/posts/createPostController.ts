@@ -3,8 +3,9 @@ import { ErrorsViewModel } from '../../models/errors-models/ErrorsViewModel'
 import { RequestWithBody } from '../../models/requestTypes'
 import { CreatePostModel } from '../../models/posts-models/CreatePostModel'
 import { PostViewModel } from '../../models/posts-models/PostViewModel'
-import { postsMongoRepository } from '../../repositories/posts/posts-mongo-repository'
 import { postsQueryRepository } from '../../repositories/posts/posts-query-repository'
+import { postsService } from '../../services/posts/posts-service'
+import { blogsQueryRepository } from '../../repositories/blogs/blogs-query-repository'
 
 // const inputValidation = (post: CreatePostModel) => {
 //     const errors: ErrorsViewModel = {
@@ -57,7 +58,9 @@ export const createPostController = async (
     //         .json(errors)
     //     return
     // }
-    const createdInfo = await postsMongoRepository.createPost(req.body) //здесь createdInfo = {id: ObjectId()}
+    const blogName = await blogsQueryRepository.findBlog(req.body.blogId)
+
+    const createdInfo = await postsService.createPost(req.body, blogName?.name) //здесь createdInfo = {id: ObjectId()}
     if (!createdInfo.id) {
         res
             .status(500)

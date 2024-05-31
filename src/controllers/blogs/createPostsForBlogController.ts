@@ -1,13 +1,12 @@
 import { Response } from "express"
-import { CreatePostModel } from "../../models/posts-models/CreatePostModel"
 import { PostViewModel } from "../../models/posts-models/PostViewModel"
-import { RequestWithBody, RequestWithParamsAndBody } from "../../models/requestTypes"
+import { RequestWithParamsAndBody } from "../../models/requestTypes"
 import { ErrorsViewModel } from "../../models/errors-models/ErrorsViewModel"
-import { postsMongoRepository } from "../../repositories/posts/posts-mongo-repository"
 import { postsQueryRepository } from "../../repositories/posts/posts-query-repository"
 import { URIParamsBlogIdModel } from "../../models/blogs-models/URIParamsBlogIdModel"
 import { CreatePostForBlogModel } from "../../models/posts-models/CreatePostForBlogModel"
 import { blogsQueryRepository } from "../../repositories/blogs/blogs-query-repository"
+import { postsService } from "../../services/posts/posts-service"
 
 export const createPostForBlogController = async (
     req: RequestWithParamsAndBody<URIParamsBlogIdModel, CreatePostForBlogModel>,
@@ -19,18 +18,8 @@ export const createPostForBlogController = async (
         return
     }
 
-    const createPost = {
-        blogId: req.params.id,
-        ...req.body
-    }
-    // const errors = inputValidation(req.body)
-    // if (errors.errorsMessages.length) {
-    //     res
-    //         .status(400)
-    //         .json(errors)
-    //     return
-    // }
-    const createdInfo = await postsMongoRepository.createPost(createPost) //здесь createdInfo = {id: ObjectId()}
+    const createdInfo = await postsService.createPostforBlog(foundBlog.id, foundBlog.name, req.body) //здесь createdInfo = {id: ObjectId()}
+
     if (!createdInfo.id) {
         res
             .status(500)

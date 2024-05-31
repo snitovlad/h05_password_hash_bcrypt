@@ -1,23 +1,14 @@
 import { ObjectId } from "mongodb";
 import { blogCollection } from "../../db/mongo-db";
-import { currentDateISOString } from "../../helper/helper";
-import { CreateBlogModel } from "../../models/blogs-models/CreateBlogModel";
 import { UpdateBlogModel } from "../../models/blogs-models/UpdateBlogModel";
-import { blogsQueryRepository } from "./blogs-query-repository";
+import { BlogDBType } from "../../db/db-type";
 
 export const blogsMongoRepository = {
 
-    async createdBlog(input: CreateBlogModel): Promise<{ error?: string, id?: ObjectId }> {
-        const newBlog = {
-            _id: new ObjectId(),
-            ...input,
-            createdAt: currentDateISOString(),
-            isMembership: false
+    async createdBlog(newBlog: BlogDBType): Promise<{ error?: string, id?: ObjectId }> {
 
-        }
         try {
             const insertedInfo = await blogCollection.insertOne(newBlog)
-            //console.log(insertedInfo)
             return { id: insertedInfo.insertedId } //возвращаем объект
         } catch (e: any) {
             // log
@@ -27,23 +18,18 @@ export const blogsMongoRepository = {
 
     async deleteBlog(id: string): Promise<boolean> {
 
-        //const foundBlog = await this.findBlog(id)
-        // if (foundBlog) {
-        //     await blogCollection.deleteOne(foundBlog)
-        //     return true
-        // } else return false
-
         const deleteInfo = await blogCollection.deleteOne({ _id: new ObjectId(id) })
         return deleteInfo.deletedCount === 1 //eсли 1 - значит true
     },
 
     async updateBlog(id: string, input: UpdateBlogModel): Promise<boolean | { error?: string }> {
 
-        let foundBlog = await blogsQueryRepository.findBlog(id)
-        const updateBlog = { ...foundBlog, ...input }
         try {
-            const updateInfo = await blogCollection.updateOne({ _id: new ObjectId(id) }, { $set: updateBlog })
+            const updateInfo = await blogCollection.updateOne({ _id: new ObjectId(id) }, { $set: { ...input } })
             return updateInfo.matchedCount === 1
+            //использовали matchedCount, а не modifiedCounter, т.к. если обновим "orange" на "orange"
+            //то modifiedCounter вернет 0 (хотя обновление произошло), а matchedCount просто проверила
+            //наличие документа на обновление и вернет 1
         } catch (e: any) {
             // log
             return { error: e.message }

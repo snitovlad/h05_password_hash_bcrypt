@@ -2,8 +2,7 @@ import { Request, Response } from 'express'
 import { RequestWithParamsAndBody } from '../../models/requestTypes'
 import { URIParamsBlogIdModel } from '../../models/blogs-models/URIParamsBlogIdModel'
 import { UpdateBlogModel } from '../../models/blogs-models/UpdateBlogModel'
-import { blogsMongoRepository } from '../../repositories/blogs/blogs-mongo-repository'
-import { ObjectId } from 'mongodb'
+import { blogsService } from '../../services/blogs/blogs-service'
 
 // const inputValidation = (blog: CreateBlogModel) => {
 //     const errors: ErrorsViewModel = {
@@ -48,7 +47,7 @@ export const updateBlogController = async (
     //         .json(errors)
     //     return
     // }
-    const isUpdate = await blogsMongoRepository.updateBlog(req.params.id, req.body)
+    const isUpdate = await blogsService.updateBlog(req.params.id, req.body)
     if (!isUpdate) {
         res.sendStatus(404)
         return

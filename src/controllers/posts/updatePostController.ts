@@ -2,7 +2,7 @@ import { Request, Response } from 'express'
 import { RequestWithParamsAndBody } from '../../models/requestTypes'
 import { URIParamsPostIdModel } from '../../models/posts-models/URIParamsPostIdModel'
 import { UpdatePostModel } from '../../models/posts-models/UpdatePostModel'
-import { postsMongoRepository } from '../../repositories/posts/posts-mongo-repository'
+import { postsService } from '../../services/posts/posts-service'
 
 // const inputValidation = (post: UpdatePostModel) => {
 //     const errors: ErrorsViewModel = {
@@ -53,8 +53,7 @@ export const updatePostController = async (req: RequestWithParamsAndBody<URIPara
     //         .json(errors)
     //     return
     // }
-
-    const isUpdate = await postsMongoRepository.updatePost(req.params.id, req.body)
+    const isUpdate = await postsService.updatePost(req.params.id, req.body)
     if (!isUpdate) {
         res.sendStatus(404)
         return
