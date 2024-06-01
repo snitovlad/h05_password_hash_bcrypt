@@ -1,5 +1,6 @@
 import { usersMongoRepository } from "../../repositories/users/user-mongo-repository"
 import { usersService } from "../users/users-service"
+import bcrypt from 'bcrypt'
 
 export const authService = {
 
@@ -13,5 +14,11 @@ export const authService = {
             return false
         }
         return true
+
+        // const isCorrect = await bcrypt.compare(password, user.passwordHash)
+        // // if (!isCorrect) {
+        // //     return false
+        // // }
+        // return isCorrect
     },
 }

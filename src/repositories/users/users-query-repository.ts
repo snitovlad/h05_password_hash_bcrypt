@@ -27,7 +27,36 @@ export const usersQueryRepository = {
             ? { email: { $regex: sanitizedQuery.searchEmailTerm, $options: 'i' } } //$options: 'i' - все равно какой регистр
             : {}
 
-        const filter = { $or: [{ ...searchLoginTerm }, { ...searchEmailTerm }] }
+        const isExistSearchEmailTerm = searchEmailTerm && Object.keys(searchEmailTerm).length > 0
+        const isExistSearchLoginTerm = searchLoginTerm && Object.keys(searchLoginTerm).length > 0
+        let filter = {}
+
+        if (isExistSearchEmailTerm) {
+            filter = { ...searchEmailTerm }
+        }
+        if (isExistSearchLoginTerm) {
+            filter = { ...searchLoginTerm }
+        }
+        if (isExistSearchEmailTerm && isExistSearchLoginTerm) {
+            filter = { $or: [{ ...searchLoginTerm }, { ...searchEmailTerm }] }
+        }
+
+
+        // const filter: any = {};
+        // // Проверяем, что searchLoginTerm не пустой объект
+        // if (searchLoginTerm && Object.keys(searchLoginTerm).length > 0) {
+        //     filter.$or = filter.$or || [];
+        //     filter.$or.push({ ...searchLoginTerm });
+        // }
+        // // Проверяем, что searchEmailTerm не пустой объект
+        // if (searchEmailTerm && Object.keys(searchEmailTerm).length > 0) {
+        //     filter.$or = filter.$or || [];
+        //     filter.$or.push({ ...searchEmailTerm });
+        // }
+        // // Если ни один из терминов не указан, удаляем $or
+        // if (!filter.$or || filter.$or.length === 0) {
+        //     delete filter.$or;
+        // }
 
         try {
             // собственно запрос в бд (может быть вынесено во вспомогательный метод)
